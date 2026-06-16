@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Mess {
+  id            Int        @id @default(autoincrement())
+  name          String
+  address       String     @default("")
+  manager_name  String     @default("")
+  manager_email String     @default("")
+  phone         String     @default("")
+  created_at    DateTime   @default(now())
+  members       Member[]
+  expenses      Expense[]
+  settings      Setting[]
+}
+
+model Member {
+  id                Int                 @id @default(autoincrement())
+  mess_id           Int
+  mess              Mess                @relation(fields: [mess_id], references: [id])
+  name              String
+  email             String
+  phone             String              @default("")
+  room_no           String              @default("")
+  rent              Float               @default(0)
+  join_date         DateTime            @default(now())
+  status            String              @default("active")
+  meals             Meal[]
+  payments          Payment[]
+  monthly_settlements MonthlySettlement[]
+  email_logs        EmailLog[]
+  invoices          Invoice[]
+}
+
+model Meal {
+  id          Int      @id @default(autoincrement())
+  member_id   Int
+  member      Member   @relation(fields: [member_id], references: [id])
+  date        DateTime
+  breakfast   Boolean  @default(false)
+  lunch       Boolean  @default(false)
+  dinner      Boolean  @default(false)
+
+  @@index([member_id, date])
+}
+
+model ExpenseCategory {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  expenses  Expense[]
+}
+
+model Expense {
+  id           Int             @id @default(autoincrement())
+  mess_id      Int
+  mess         Mess            @relation(fields: [mess_id], references: [id])
+  category_id  Int
+  category     ExpenseCategory @relation(fields: [category_id], references: [id])
+  amount       Float
+  description  String          @default("")
+  receipt_url  String          @default("")
+  expense_date DateTime
+  paid_by      String          @default("")
+  created_at   DateTime        @default(now())
+
+  @@index([mess_id, expense_date])
+}
+
+model Payment {
+  id           Int      @id @default(autoincrement())
+  member_id    Int
+  member       Member   @relation(fields: [member_id], references: [id])
+  amount       Float
+  payment_date DateTime
+  method       String   @default("cash")
+  reference    String   @default("")
+  created_at   DateTime @default(now())
+
+  @@index([member_id, payment_date])
+}
+
+model MonthlySettlement {
+  id            Int      @id @default(autoincrement())
+  member_id     Int
+  member        Member   @relation(fields: [member_id], references: [id])
+  month         Int
+  year          Int
+  meal_count    Float
+  meal_rate     Float
+  meal_cost     Float
+  rent          Float
+  utility_share Float
+  payment_total Float
+  total_due     Float
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@unique([member_id, month, year])
+  @@index([month, year])
+}
+
+model Invoice {
+  id            Int      @id @default(autoincrement())
+  settlement_id Int
+  member_id     Int
+  member        Member   @relation(fields: [member_id], references: [id])
+  month         Int
+  year          Int
+  pdf_path      String
+  email_sent    Boolean  @default(false)
+  sent_at       DateTime?
+  created_at    DateTime @default(now())
+
+  @@index([member_id, month, year])
+}
+
+model EmailLog {
+  id            Int      @id @default(autoincrement())
+  member_id     Int
+  member        Member   @relation(fields: [member_id], references: [id])
+  subject       String
+  status        String   @default("pending")
+  sent_at       DateTime?
+  error_message String   @default("")
+  created_at    DateTime @default(now())
+}
+
+model Setting {
+  id                 Int      @id @default(autoincrement())
+  mess_id            Int
+  mess               Mess     @relation(fields: [mess_id], references: [id])
+  breakfast_weight   Float  @default(0.5)
+  lunch_weight       Float  @default(1.0)
+  dinner_weight      Float  @default(1.0)
+  auto_email_enabled Boolean  @default(false)
+  auto_close_enabled Boolean  @default(false)
+  smtp_host          String   @default("")
+  smtp_port          Int      @default(587)
+  smtp_username      String   @default("")
+  smtp_password      String   @default("")
+  smtp_from          String   @default("")
+  currency           String   @default("BDT")
+  language           String   @default("en")
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  @@unique([mess_id])
+}
