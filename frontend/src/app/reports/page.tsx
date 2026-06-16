@@ -126,7 +126,6 @@ export default function ReportsPage() {
                 <TableHead>Meals</TableHead>
                 <TableHead>Meal Rate</TableHead>
                 <TableHead>Meal Cost</TableHead>
-                <TableHead>Rent</TableHead>
                 <TableHead>Utility</TableHead>
                 <TableHead>Payments</TableHead>
                 <TableHead>Total Due</TableHead>
@@ -139,7 +138,6 @@ export default function ReportsPage() {
                   <TableCell>{settlement.meal_count?.toFixed(1)}</TableCell>
                   <TableCell>৳{settlement.meal_rate?.toFixed(2)}</TableCell>
                   <TableCell>৳{settlement.meal_cost?.toFixed(2)}</TableCell>
-                  <TableCell>৳{settlement.rent?.toFixed(2)}</TableCell>
                   <TableCell>৳{settlement.utility_share?.toFixed(2)}</TableCell>
                   <TableCell>৳{settlement.payment_total?.toFixed(2)}</TableCell>
                   <TableCell className={settlement.total_due > 0 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}>

@@ -17,7 +17,6 @@ CREATE TABLE "Member" (
     "email" TEXT NOT NULL,
     "phone" TEXT NOT NULL DEFAULT '',
     "room_no" TEXT NOT NULL DEFAULT '',
-    "rent" REAL NOT NULL DEFAULT 0,
     "join_date" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" TEXT NOT NULL DEFAULT 'active',
     CONSTRAINT "Member_mess_id_fkey" FOREIGN KEY ("mess_id") REFERENCES "Mess" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -76,7 +75,6 @@ CREATE TABLE "MonthlySettlement" (
     "meal_count" REAL NOT NULL,
     "meal_rate" REAL NOT NULL,
     "meal_cost" REAL NOT NULL,
-    "rent" REAL NOT NULL,
     "utility_share" REAL NOT NULL,
     "payment_total" REAL NOT NULL,
     "total_due" REAL NOT NULL,

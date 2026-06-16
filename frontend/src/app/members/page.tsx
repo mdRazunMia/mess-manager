@@ -67,7 +67,6 @@ export default function MembersPage() {
     email: '',
     phone: '',
     room_no: '',
-    rent: '',
     join_date: '',
   });
 
@@ -99,7 +98,7 @@ export default function MembersPage() {
       queryClient.invalidateQueries({ queryKey: ['members'] });
       toast.success('Member added successfully');
       setOpen(false);
-      setForm({ name: '', email: '', phone: '', room_no: '', rent: '', join_date: '' });
+      setForm({ name: '', email: '', phone: '', room_no: '', join_date: '' });
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to add member');
@@ -129,7 +128,6 @@ export default function MembersPage() {
     e.preventDefault();
     createMutation.mutate({
       ...form,
-      rent: parseFloat(form.rent) || 0,
       join_date: form.join_date ? new Date(form.join_date).toISOString() : new Date().toISOString(),
     });
   };
@@ -249,15 +247,6 @@ export default function MembersPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="rent">Monthly Rent</Label>
-                <Input
-                  id="rent"
-                  type="number"
-                  value={form.rent}
-                  onChange={(e) => setForm({ ...form, rent: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="join_date">Joining Date</Label>
                 <Input
                   id="join_date"
@@ -283,7 +272,6 @@ export default function MembersPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Phone</TableHead>
                 <TableHead>Room</TableHead>
-                <TableHead>Rent</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -295,7 +283,6 @@ export default function MembersPage() {
                   <TableCell>{member.email}</TableCell>
                   <TableCell>{member.phone}</TableCell>
                   <TableCell>{member.room_no}</TableCell>
-                  <TableCell>৳{member.rent}</TableCell>
                   <TableCell>
                     <Badge variant={member.status === 'active' ? 'default' : 'secondary'}>
                       {member.status}
@@ -491,10 +478,6 @@ export default function MembersPage() {
                       <div className="flex justify-between border-b pb-2">
                         <span className="text-muted-foreground">Meal Rate</span>
                         <span className="font-medium">৳{statement.meal_rate ?? 0}/meal</span>
-                      </div>
-                      <div className="flex justify-between border-b pb-2">
-                        <span className="text-muted-foreground">Rent</span>
-                        <span className="font-medium">৳{statement.rent ?? 0}</span>
                       </div>
                       <div className="flex justify-between border-b pb-2">
                         <span className="text-muted-foreground">Utility Share</span>

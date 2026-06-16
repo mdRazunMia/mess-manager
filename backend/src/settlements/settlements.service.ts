@@ -114,7 +114,7 @@ export class SettlementsService {
 
       const paymentTotal = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      const totalDue = mealCost + (member.rent || 0) + utilityShare - paymentTotal;
+      const totalDue = mealCost + utilityShare - paymentTotal;
 
       const settlement = await this.prisma.monthlySettlement.upsert({
         where: {
@@ -128,7 +128,6 @@ export class SettlementsService {
           meal_count: mealCount,
           meal_rate: mealRate,
           meal_cost: mealCost,
-          rent: member.rent || 0,
           utility_share: utilityShare,
           payment_total: paymentTotal,
           total_due: totalDue,
@@ -140,7 +139,6 @@ export class SettlementsService {
           meal_count: mealCount,
           meal_rate: mealRate,
           meal_cost: mealCost,
-          rent: member.rent || 0,
           utility_share: utilityShare,
           payment_total: paymentTotal,
           total_due: totalDue,

@@ -28,7 +28,6 @@ model Member {
   email             String
   phone             String              @default("")
   room_no           String              @default("")
-  rent              Float               @default(0)
   join_date         DateTime            @default(now())
   status            String              @default("active")
   meals             Meal[]
@@ -94,7 +93,6 @@ model MonthlySettlement {
   meal_count    Float
   meal_rate     Float
   meal_cost     Float
-  rent          Float
   utility_share Float
   payment_total Float
   total_due     Float

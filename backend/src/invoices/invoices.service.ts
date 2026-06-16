@@ -106,7 +106,6 @@ export class InvoicesService {
             body: [
               ['Description', 'Count', 'Rate', 'Amount'],
               ['Meals', settlement?.meal_count?.toFixed(2) || '0', `${currency} ${settlement?.meal_rate?.toFixed(2) || '0'}`, `${currency} ${settlement?.meal_cost?.toFixed(2) || '0'}`],
-              ['Rent', '', '', `${currency} ${settlement?.rent?.toFixed(2) || '0'}`],
               ['Utility Share', '', '', `${currency} ${settlement?.utility_share?.toFixed(2) || '0'}`],
               ['Payments', '', '', `-${currency} ${settlement?.payment_total?.toFixed(2) || '0'}`],
               [{ text: 'Total Due', bold: true }, '', '', { text: `${currency} ${settlement?.total_due?.toFixed(2) || '0'}`, bold: true }],

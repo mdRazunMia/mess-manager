@@ -41,7 +41,6 @@ export class MembersService {
     } else {
       createData.mess_id = 1;
     }
-    if (data.rent !== undefined) createData.rent = Number(data.rent);
     if (data.join_date) createData.join_date = new Date(data.join_date);
     return this.prisma.member.create({ data: createData });
   }
@@ -49,7 +48,6 @@ export class MembersService {
   update(id: number, data: any) {
     const updateData: any = { ...data };
     if (data.mess_id !== undefined) updateData.mess_id = Number(data.mess_id);
-    if (data.rent !== undefined) updateData.rent = Number(data.rent);
     if (data.join_date) updateData.join_date = new Date(data.join_date);
     return this.prisma.member.update({
       where: { id },
@@ -179,8 +177,7 @@ export class MembersService {
     const utilityShare = activeMembers > 0 ? totalUtilityCost / activeMembers : 0;
     const mealRate = weightedMeals > 0 ? totalFoodCost / weightedMeals : 0;
     const mealCost = weightedMeals * mealRate;
-    const rent = member.rent || 0;
-    const totalDue = mealCost + rent + utilityShare - totalPayments;
+    const totalDue = mealCost + utilityShare - totalPayments;
 
     return {
       member,
@@ -194,7 +191,6 @@ export class MembersService {
       },
       meal_rate: Number(mealRate.toFixed(2)),
       meal_cost: Number(mealCost.toFixed(2)),
-      rent: Number(rent.toFixed(2)),
       utility_share: Number(utilityShare.toFixed(2)),
       total_expenses: {
         food: Number(totalFoodCost.toFixed(2)),
