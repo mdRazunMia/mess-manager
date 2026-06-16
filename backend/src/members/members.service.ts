@@ -129,6 +129,15 @@ export class MembersService {
     });
     const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
 
+    // Member expenses (paid by this member)
+    const memberExpenses = await this.prisma.expense.findMany({
+      where: {
+        expense_date: { gte: startDate, lt: endDate },
+        paid_by: member.name,
+      },
+    });
+    const totalMemberExpenses = memberExpenses.reduce((sum, e) => sum + e.amount, 0);
+
     // Expenses (shopping / market)
     const marketCategory = await this.prisma.expenseCategory.findUnique({
       where: { name: 'Market' },
@@ -177,7 +186,8 @@ export class MembersService {
     const utilityShare = activeMembers > 0 ? totalUtilityCost / activeMembers : 0;
     const mealRate = weightedMeals > 0 ? totalFoodCost / weightedMeals : 0;
     const mealCost = weightedMeals * mealRate;
-    const totalDue = mealCost + utilityShare - totalPayments;
+    const totalContribution = totalPayments + totalMemberExpenses;
+    const totalDue = mealCost + utilityShare - totalContribution;
 
     return {
       member,
@@ -200,6 +210,10 @@ export class MembersService {
       payments: {
         total: Number(totalPayments.toFixed(2)),
         list: payments,
+      },
+      member_expenses: {
+        total: Number(totalMemberExpenses.toFixed(2)),
+        list: memberExpenses,
       },
       total_due: Number(totalDue.toFixed(2)),
       status: totalDue > 0 ? 'give_taka' : totalDue < 0 ? 'back_taka' : 'settled',

@@ -487,6 +487,10 @@ export default function MembersPage() {
                         <span className="text-muted-foreground">Total Payments</span>
                         <span className="font-medium text-green-600">৳{statement.payments?.total ?? 0}</span>
                       </div>
+                      <div className="flex justify-between border-b pb-2">
+                        <span className="text-muted-foreground">Member Expenses</span>
+                        <span className="font-medium text-green-600">৳{statement.member_expenses?.total ?? 0}</span>
+                      </div>
                       <div className="flex justify-between pt-1">
                         <span className="font-medium">Total Due</span>
                         <span className={`font-bold ${statement.total_due > 0 ? 'text-red-600' : statement.total_due < 0 ? 'text-blue-600' : 'text-green-600'}`}>

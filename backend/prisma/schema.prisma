@@ -95,6 +95,7 @@ model MonthlySettlement {
   meal_cost     Float
   utility_share Float
   payment_total Float
+  expense_total Float  @default(0)
   total_due     Float
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt

@@ -77,6 +77,7 @@ CREATE TABLE "MonthlySettlement" (
     "meal_cost" REAL NOT NULL,
     "utility_share" REAL NOT NULL,
     "payment_total" REAL NOT NULL,
+    "expense_total" REAL NOT NULL DEFAULT 0,
     "total_due" REAL NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,

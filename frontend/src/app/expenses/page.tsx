@@ -48,6 +48,13 @@ function useCategories() {
   });
 }
 
+function useActiveMembers() {
+  return useQuery({
+    queryKey: ['members', 'active'],
+    queryFn: () => api.get('/members?status=active'),
+  });
+}
+
 export default function ExpensesPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
@@ -61,6 +68,7 @@ export default function ExpensesPage() {
 
   const { data: expenses, isLoading } = useExpenses();
   const { data: categories } = useCategories();
+  const { data: activeMembers } = useActiveMembers();
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
@@ -153,10 +161,21 @@ export default function ExpensesPage() {
               </div>
               <div className="space-y-2">
                 <Label>Paid By</Label>
-                <Input
+                <Select
                   value={form.paid_by}
-                  onChange={(e) => setForm({ ...form, paid_by: e.target.value })}
-                />
+                  onValueChange={(v) => setForm({ ...form, paid_by: v || '' })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select member" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {activeMembers?.map((member: any) => (
+                      <SelectItem key={member.id} value={member.name}>
+                        {member.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <Button type="submit" disabled={createMutation.isPending}>
                 {createMutation.isPending ? 'Adding...' : 'Add Expense'}

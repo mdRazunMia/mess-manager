@@ -6,10 +6,11 @@ export class SettlementsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(month: number, year: number) {
-    return this.prisma.monthlySettlement.findMany({
+    const settlements = await this.prisma.monthlySettlement.findMany({
       where: { month, year },
       include: { member: true },
     });
+    return { settlements };
   }
 
   async findOne(memberId: number, month: number, year: number) {
@@ -114,7 +115,16 @@ export class SettlementsService {
 
       const paymentTotal = payments.reduce((sum, p) => sum + p.amount, 0);
 
-      const totalDue = mealCost + utilityShare - paymentTotal;
+      // Get member expenses for the month
+      const memberExpenses = await this.prisma.expense.findMany({
+        where: {
+          expense_date: { gte: startDate, lt: endDate },
+          paid_by: member.name,
+        },
+      });
+
+      const expenseTotal = memberExpenses.reduce((sum, e) => sum + e.amount, 0);
+      const totalDue = mealCost + utilityShare - (paymentTotal + expenseTotal);
 
       const settlement = await this.prisma.monthlySettlement.upsert({
         where: {
@@ -130,6 +140,7 @@ export class SettlementsService {
           meal_cost: mealCost,
           utility_share: utilityShare,
           payment_total: paymentTotal,
+          expense_total: expenseTotal,
           total_due: totalDue,
         },
         create: {
@@ -141,6 +152,7 @@ export class SettlementsService {
           meal_cost: mealCost,
           utility_share: utilityShare,
           payment_total: paymentTotal,
+          expense_total: expenseTotal,
           total_due: totalDue,
         },
         include: { member: true },

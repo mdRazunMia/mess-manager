@@ -108,6 +108,7 @@ export class InvoicesService {
               ['Meals', settlement?.meal_count?.toFixed(2) || '0', `${currency} ${settlement?.meal_rate?.toFixed(2) || '0'}`, `${currency} ${settlement?.meal_cost?.toFixed(2) || '0'}`],
               ['Utility Share', '', '', `${currency} ${settlement?.utility_share?.toFixed(2) || '0'}`],
               ['Payments', '', '', `-${currency} ${settlement?.payment_total?.toFixed(2) || '0'}`],
+              ['Member Expenses', '', '', `-${currency} ${settlement?.expense_total?.toFixed(2) || '0'}`],
               [{ text: 'Total Due', bold: true }, '', '', { text: `${currency} ${settlement?.total_due?.toFixed(2) || '0'}`, bold: true }],
             ],
           },
